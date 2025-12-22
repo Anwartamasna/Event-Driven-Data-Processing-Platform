@@ -1,0 +1,3 @@
+# Raw user events data directory
+# This directory is populated by the Spark Streaming job
+# Data is partitioned by: year/month/day

@@ -1,0 +1,3 @@
+# Processed metrics data directory
+# This directory is populated by the Spark Batch job
+# Data is partitioned by: process_date
