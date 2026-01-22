@@ -38,13 +38,14 @@ def validate_results(**context):
     2. Output has data files
     3. Basic data quality checks
     """
-    execution_date = context['ds']  # YYYY-MM-DD format
+    execution_date = datetime.strptime(context['ds'], '%Y-%m-%d')
+    target_date = execution_date - timedelta(days=1)
     
     # Path where batch job writes output
     output_base = "/data/processed/daily_metrics"
-    output_path = f"{output_base}/process_date={execution_date}"
+    output_path = f"{output_base}/process_date={target_date.date()}"
     
-    print(f"Validating output for date: {execution_date}")
+    print(f"Validating output for date: {target_date.date()}")
     print(f"Checking path: {output_path}")
     
     # Check 1: Directory exists
@@ -99,7 +100,7 @@ with DAG(
     dag_id='daily_batch_pipeline',
     default_args=default_args,
     description='Daily batch pipeline for user event metrics aggregation',
-    schedule_interval='0 2 * * *',  # Daily at 2 AM
+    schedule_interval='*/5 * * * *',  # Every 5 minutes
     catchup=False,
     max_active_runs=1,
     tags=['batch', 'spark', 'metrics'],

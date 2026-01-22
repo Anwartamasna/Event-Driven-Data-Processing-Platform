@@ -6,7 +6,7 @@ This job reads user events from Kafka, parses the JSON, and writes
 raw events to the data lake in Parquet format, partitioned by date.
 
 Usage:
-    spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 streaming_job.py
+    spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.6 streaming_job.py
 
 This job runs CONTINUOUSLY and is NOT orchestrated by Airflow.
 Start it once and let it run.
@@ -14,7 +14,7 @@ Start it once and let it run.
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
-    col, from_json, to_date, year, month, dayofmonth
+    col, from_json, to_date, to_timestamp, year, month, dayofmonth
 )
 from pyspark.sql.types import (
     StructType, StructField, StringType, IntegerType, TimestampType
@@ -97,8 +97,13 @@ def main():
         )
     
     # Add date partition columns
+    # Parse ISO timestamp strings before deriving date partitions.
     events_with_date = parsed_df \
-        .withColumn("event_date", to_date(col("event_timestamp"))) \
+        .withColumn(
+            "event_ts",
+            to_timestamp(col("event_timestamp"), "yyyy-MM-dd'T'HH:mm:ss")
+        ) \
+        .withColumn("event_date", to_date(col("event_ts"))) \
         .withColumn("year", year(col("event_date"))) \
         .withColumn("month", month(col("event_date"))) \
         .withColumn("day", dayofmonth(col("event_date")))

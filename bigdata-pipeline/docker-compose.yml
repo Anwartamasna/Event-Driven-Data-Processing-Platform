@@ -37,7 +37,7 @@ services:
   # SPARK CLUSTER
   # ---------------------------
   spark-master:
-    image: bitnami/spark:3.5
+    image: bitnamilegacy/spark:3.5.6
     container_name: spark-master
     environment:
       - SPARK_MODE=master
@@ -55,7 +55,7 @@ services:
       - bigdata-net
 
   spark-worker:
-    image: bitnami/spark:3.5
+    image: bitnamilegacy/spark:3.5.6
     container_name: spark-worker
     depends_on:
       - spark-master
