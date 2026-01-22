@@ -69,20 +69,20 @@ bigdata-pipeline/
 
 ```bash
 cd bigdata-pipeline
-docker-compose up -d
+docker compose up -d
 ```
 
 Wait for all services to be ready (about 1-2 minutes):
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 ### Step 2: Initialize Airflow (First Time Only)
 
 ```bash
 # Wait for airflow-init to complete
-docker-compose logs airflow-init
+docker compose logs airflow-init
 
 # Access Airflow UI at http://localhost:8081
 # Login: admin / admin
@@ -104,7 +104,7 @@ This job runs continuously in the background:
 
 ```bash
 docker exec spark-master spark-submit \
-  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.6 \
   /spark/streaming_job.py
 ```
 
